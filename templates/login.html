@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | RetailPlus</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
+    <div class="form-card" style="width: 100%; max-width: 420px; text-align: center;">
+        <h2 style="color: #1e3a8a; margin-bottom: 5px;">RetailPlus Login</h2>
+        
+        <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 25px;">Enter your staff credentials to continue</p>
+
+        {% if error %}
+        <div style="background-color: #fee2e2; color: #991b1b; padding: 10px; border-radius: 6px; margin-bottom: 15px; font-size: 0.9rem; font-weight: 600;">
+            ⚠️ {{ error }}
+        </div>
+        {% endif %}
+
+        <form action="/login" method="POST">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="e.g. admin or cashier1" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter password" required>
+            </div>
+            <button type="submit" class="btn">Log In</button>
+        </form>
+        
+        <div style="margin-top: 20px; font-size: 0.85kp; color: #64748b; text-align: left; background: #f8fafc; padding: 10px; border-radius: 6px;">
+            <strong>Demo Logins:</strong><br>
+            • Admin: <code>admin</code> / <code>adminpassword</code><br>
+            • Cashier: <code>cashier1</code> / <code>cashierpassword</code>
+        </div>
+    </div>
+</body>
+</html>

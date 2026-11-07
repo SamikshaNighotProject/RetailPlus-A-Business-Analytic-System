@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Management | RetailPlus</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">RetailPlus Admin Panel</div>
+        <ul class="nav-links">
+            <li><a href="/">Dashboard</a></li>
+            {% if role != 'admin' %}
+            <li><a href="/add_sales">Add Sale</a></li>
+            {% endif %}
+            <li><a href="/Inventory">Inventory</a></li>
+            <li><a href="/sales_history">Sales History</a></li>
+            {% if role == 'admin' %}
+            <li><a href="/staff">Staff</a></li>
+            {% endif %}
+            <li><a href="/support">Help Desk</a></li>
+            <li><a href="/logout" style="color: #f87171;">Logout</a></li>
+        </ul>
+    </nav>
+
+    <main class="container" style="max-width: 900px;">
+        <h1>Staff & User Access Control</h1>
+
+        {% if error %}
+        <div style="background-color: #fee2e2; color: #991b1b; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-weight: 600;">
+            ⚠️ {{ error }}
+        </div>
+        {% endif %}
+
+        <!-- Add Staff Form -->
+        <div class="form-card" style="margin-bottom: 25px;">
+            <h3>Add New Staff Member</h3>
+            <form action="/staff" method="POST" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label>Full Name</label>
+                    <input type="text" name="name" placeholder="Staff Name" required>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label>Username</label>
+                    <input type="text" name="username" placeholder="Login Username" required>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Login Password" required>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label>Role</label>
+                    <select name="role">
+                        <option value="user">Cashier (User)</option>
+                        <option value="admin">Administrator</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn" style="grid-column: span 2; margin-top: 10px;">Create Staff Account</button>
+            </form>
+        </div>
+
+        <!-- Staff List Table -->
+        <div class="card">
+            <h3>Active Staff Accounts</h3>
+            <table class="sales-table" style="margin-top: 15px;">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for member in staff %}
+                    <tr>
+                        <td style="font-weight: 600;">{{ member.name }}</td>
+                        <td><code>{{ member.username }}</code></td>
+                        <td>
+                            {% if member.role == 'admin' %}
+                            <span style="color: #7c3aed; font-weight: bold;">Administrator</span>
+                            {% else %}
+                            <span style="color: #0284c7; font-weight: bold;">Cashier (User)</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if member.username != session.get('username') %}
+                            <a href="/staff/delete/{{ member.username }}" class="delete-btn" onclick="return confirm('Revoke access for this user?')">Remove Access</a>
+                            {% else %}
+                            <span style="color: #64748b; font-size: 0.85rem;">(Current User)</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+</html>
