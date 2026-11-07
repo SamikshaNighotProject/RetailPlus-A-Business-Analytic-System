@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory | RetailPlus</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">RetailPlus Inventory</div>
+        <ul class="nav-links">
+            <li><a href="/">Dashboard</a></li>
+            {% if role != 'admin' %}
+            <li><a href="/add_sales">Add Sale</a></li>
+            {% endif %}
+            <li><a href="/Inventory">Inventory</a></li>
+            <li><a href="/sales_history">Sales History</a></li>
+            {% if role == 'admin' %}
+            <li><a href="/staff">Staff</a></li>
+            {% endif %}
+            <li><a href="/support">Help Desk</a></li>
+            <li><a href="/logout" style="color: #f87171;">Logout</a></li>
+        </ul>
+    </nav>
+
+    <main class="container" style="max-width: 1100px;">
+        <h1>Inventory Stock Management</h1>
+
+        {% if role == 'admin' %}
+        <!-- Admin Add New Item Form Card -->
+        <div class="form-card" style="margin-bottom: 30px;">
+            <h3>➕ Add New Item to Inventory (Admin Only)</h3>
+            <form action="/inventory/add" method="POST" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                <input type="text" name="name" placeholder="Item Name" required>
+                <input type="number" step="0.01" name="purchase_price" placeholder="Purchase Price (₹)" required>
+                <input type="number" step="0.01" name="selling_price" placeholder="Selling Price (₹)" required>
+                <input type="number" name="stock" placeholder="Initial Stock Qty" required>
+                <button type="submit" class="btn" style="margin-top: 0; grid-column: span 1;">Add Item</button>
+            </form>
+        </div>
+        {% endif %}
+
+        <div class="card">
+            <table class="sales-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Item Name</th>
+                        <th>Purchase Price</th>
+                        <th>Selling Price</th>
+                        <th>Stock Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in inventory %}
+                    <tr>
+                        <td>#{{ item.id }}</td>
+                        <td style="font-weight: 600;">{{ item.name }}</td>
+                        <td>₹{{ item.purchase_price }}</td>
+                        <td>
+                            {% if role == 'admin' %}
+                            <form action="/inventory/update_price/{{ item.id }}" method="POST" style="display: flex; gap: 5px;">
+                                <input type="number" step="0.01" name="selling_price" value="{{ item.selling_price }}" style="padding: 4px 8px; width: 90px;">
+                                <button type="submit" class="btn" style="padding: 4px 8px; margin-top: 0; font-size: 0.8rem; width: auto;">Update</button>
+                            </form>
+                            {% else %}
+                            ₹{{ item.selling_price }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if item.stock <= 5 %}
+                                <span style="color: #dc2626; font-weight: bold;">⚠️ Low Stock ({{ item.stock }})</span>
+                            {% else %}
+                                <span style="color: #059669; font-weight: bold;">{{ item.stock }} units</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 6px; align-items: center;">
+                                {% if role == 'admin' %}
+                                <form action="/restock/{{ item.id }}" method="POST" style="display: flex; gap: 4px;">
+                                    <input type="number" name="add_qty" value="10" min="1" style="width: 60px; padding: 4px;">
+                                    <button type="submit" class="delete-btn" style="background-color: #2563eb;">Restock</button>
+                                </form>
+                                <a href="/inventory/delete/{{ item.id }}" class="delete-btn" onclick="return confirm('Delete this item from inventory?')">Delete</a>
+                                {% else %}
+                                <span style="color: #64748b; font-size: 0.9rem;">View Only</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+</html>

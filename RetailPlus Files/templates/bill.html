@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice | RetailPlus</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            color: #1e293b; /* Ensures text is dark and clear on screen */
+        }
+        @media print {
+            body {
+                color: #000000 !important; /* Forces dark black text for printing */
+            }
+            table tr {
+                display: table-row !important;
+            }
+            td, th {
+                white-space: nowrap;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar no-print">
+        <div class="logo">RetailPlus</div>
+        <ul class="nav-links">
+            <li><a href="/">Dashboard</a></li>
+            {% if role != 'admin' %}
+            <li><a href="/add_sales">Add Sale</a></li>
+            {% endif %}
+            <li><a href="/Inventory">Inventory</a></li>
+            <li><a href="/sales_history">Sales History</a></li>
+            {% if role == 'admin' %}
+            <li><a href="/staff">Staff</a></li>
+            {% endif %}
+            <li><a href="/support">Help Desk</a></li>
+            <li><a href="/logout" style="color: #f87171;">Logout</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <div class="form-card" style="max-width: 600px; margin: 40px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); color: #1e293b;">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h2 style="color: #0f172a;">RetailPlus Invoice</h2>
+                <p style="color: #475569; margin: 5px 0;">Store Billing System</p>
+                <hr style="border: 0; border-top: 1px solid #cbd5e1; margin: 15px 0;">
+            </div>
+
+            <div style="margin-bottom: 20px; color: #334155;">
+                <p><strong>Bill ID:</strong> {{ sale.id }}</p>
+                <p><strong>Customer Name:</strong> {{ sale.customer_name }}</p>
+                <p><strong>Cashier:</strong> {{ sale.cashier }}</p>
+                <p><strong>Date & Time:</strong> {{ sale.date }}</p>
+            </div>
+
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                <thead>
+                    <tr style="background: #f1f5f9; border-bottom: 2px solid #cbd5e1; color: #0f172a;">
+                        <th style="padding: 10px; text-align: left;">Product Name</th>
+                        <th style="padding: 10px; text-align: center;">Qty</th>
+                        <th style="padding: 10px; text-align: right;">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in sale.items %}
+                    <tr style="border-bottom: 1px solid #e2e8f0; color: #1e293b;">
+                        <td style="padding: 12px; text-align: left;">{{ item.product_name }}</td>
+                        <td style="padding: 12px; text-align: center;">{{ item.quantity }}</td>
+                        <td style="padding: 12px; text-align: right;">₹{{ "%.2f"|format(item.price * item.quantity) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div style="text-align: right; margin-bottom: 30px; color: #0f172a;">
+                <h3>Total Amount: ₹{{ "%.2f"|format(sale.total) }}</h3>
+            </div>
+
+            <!-- Action Buttons (Hidden when printing) -->
+            <div class="no-print" style="display: flex; gap: 10px; justify-content: space-between;">
+                <button onclick="window.print()" class="btn" style="background: #10b981; flex: 1; cursor: pointer;">Print Bill</button>
+                <a href="/sales_history" class="btn" style="background: #4f46e5; flex: 1; text-align: center; text-decoration: none; line-height: normal; padding: 12px; color: white;">Go to Sales History</a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

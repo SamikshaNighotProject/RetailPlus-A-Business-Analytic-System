@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support & Help Desk | RetailPlus</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-shop" viewBox="0 0 16 16">
+              <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.37 2.37 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0M1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5M4 15h3v-5H4zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zm3 0h-2v3h2z"/>
+            </svg> RetailPlus
+        </div>
+        <ul class="nav-links">
+    <li><a href="/">Dashboard</a></li>
+    <li><a href="/add_sales">Add Sale</a></li>
+    <li><a href="/Inventory">Inventory</a></li>
+    <li><a href="/sales_history">Sales History</a></li>
+    {% if role == 'admin' %}
+    <li><a href="/staff">Staff</a></li>
+    {% endif %}
+    <li><a href="/support">Help Desk</a></li>
+    <li><a href="/logout" style="color: #f87171;">Logout</a></li>
+</ul>
+    </nav>
+
+    <main class="container" style="max-width: 900px;">
+        <h1>Help Desk & Support Center</h1>
+
+        {% if success %}
+        <div style="background-color: #d1fae5; color: #065f46; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-weight: 600; border: 1px solid #10b981;">
+            ✅ {{ success }}
+        </div>
+        {% endif %}
+
+        <!-- Contact Information Card -->
+        <div class="card" style="margin-bottom: 25px;">
+            <h3>📞 Developer Contact Information</h3>
+            <p style="margin-top: 10px; color: #475569;">If you are experiencing any technical issues with the RetailPlus application, feel free to reach out directly through the channels below:</p>
+            <ul style="margin-top: 15px; padding-left: 20px; color: #1e293b; font-weight: 500;">
+                <li><strong>Developer Name:</strong> N.Samiksha</li>
+                <li><strong>Support Email:</strong> support@retailplus-analytics.com</li>
+                <li><strong>Helpline Number:</strong> +91 9855084480</li>
+                <li><strong>Office Hours:</strong> Monday – Saturday (9:00 AM – 6:00 PM)</li>
+            </ul>
+        </div>
+
+        <!-- Support Ticket Form Card -->
+        <div class="form-card">
+            <h2>Submit a Support Ticket</h2>
+            <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 20px;">Describe any technical difficulties or inquiries below, and our team will get back to you.</p>
+            
+            <form action="/support" method="POST">
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" name="subject" placeholder="Brief summary of the issue" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Message Description</label>
+                    <textarea id="message" name="message" rows="4" placeholder="Provide details about what went wrong..." required style="resize: vertical;"></textarea>
+                </div>
+                
+                <button type="submit" class="btn">Send Support Ticket</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>
